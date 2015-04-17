@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="bayabalib20140719">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/app/libs/bayabalib20140719.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
