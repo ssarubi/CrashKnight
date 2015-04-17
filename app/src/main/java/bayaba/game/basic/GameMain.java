@@ -1,41 +1,42 @@
 package bayaba.game.basic;
 
+import android.content.Context;
+
 import java.util.Random;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import android.content.Context;
 import bayaba.engine.lib.GameInfo;
 
 public class GameMain
 {
-	public GL10 mGL = null; // OpenGL °´Ã¼
+	public GL10 mGL = null; // OpenGL ê°ì²´
 	public Context MainContext;
-	public Random MyRand = new Random(); // ·£´ı ¹ß»ı±â
-	public GameInfo gInfo; // °ÔÀÓ È¯°æ ¼³Á¤¿ë Å¬·¡½º : MainActivity¿¡ ¼±¾ğµÈ °ÍÀ» Àü´Ş ¹Ş´Â´Ù.
+	public Random MyRand = new Random(); // ëœë¤ ë°œìƒê¸°
+	public GameInfo gInfo; // ê²Œì„ í™˜ê²½ ì„¤ì •ìš© í´ë˜ìŠ¤ : MainActivityì— ì„ ì–¸ëœ ê²ƒì„ ì „ë‹¬ ë°›ëŠ”ë‹¤.
 	public float TouchX, TouchY;
 	
-	public GameMain( Context context, GameInfo info ) // Å¬·¡½º »ı¼ºÀÚ (¸ŞÀÎ ¾×Æ¼ºñÆ¼¿¡¼­ È£Ãâ)
+	public GameMain( Context context, GameInfo info ) // í´ë˜ìŠ¤ ìƒì„±ì (ë©”ì¸ ì•¡í‹°ë¹„í‹°ì—ì„œ í˜¸ì¶œ)
 	{
-		MainContext = context; // ¸ŞÀÎ ÄÁÅØ½ºÆ®¸¦ º¯¼ö¿¡ º¸°üÇÑ´Ù.
-		gInfo = info; // ¸ŞÀÎ ¾×Æ¼ºñÆ¼¿¡¼­ »ı¼ºµÈ Å¬·¡½º¸¦ °¡Á®¿Â´Ù.
+		MainContext = context; // ë©”ì¸ ì»¨í…ìŠ¤íŠ¸ë¥¼ ë³€ìˆ˜ì— ë³´ê´€í•œë‹¤.
+		gInfo = info; // ë©”ì¸ ì•¡í‹°ë¹„í‹°ì—ì„œ ìƒì„±ëœ í´ë˜ìŠ¤ë¥¼ ê°€ì ¸ì˜¨ë‹¤.
 	}
 
-	public void LoadGameData() // SurfaceClass¿¡¼­ OpenGLÀÌ ÃÊ±âÈ­µÇ¸é ÃÖÃÊ·Î È£ÃâµÇ´Â ÇÔ¼ö
+	public void LoadGameData() // SurfaceClassì—ì„œ OpenGLì´ ì´ˆê¸°í™”ë˜ë©´ ìµœì´ˆë¡œ í˜¸ì¶œë˜ëŠ” í•¨ìˆ˜
 	{
-		// °ÔÀÓ µ¥ÀÌÅÍ¸¦ ·ÎµåÇÕ´Ï´Ù.
+		// ê²Œì„ ë°ì´í„°ë¥¼ ë¡œë“œí•©ë‹ˆë‹¤.
 	}
 	
-	public void PushButton( boolean push ) // OpenGL È­¸é¿¡ ÅÍÄ¡°¡ ¹ß»ıÇÏ¸é GLView¿¡¼­ È£ÃâµÈ´Ù.
+	public void PushButton( boolean push ) // OpenGL í™”ë©´ì— í„°ì¹˜ê°€ ë°œìƒí•˜ë©´ GLViewì—ì„œ í˜¸ì¶œëœë‹¤.
 	{
-		// ÅÍÄ¡¸¦ Ã³¸®ÇÕ´Ï´Ù.
+		// í„°ì¹˜ë¥¼ ì²˜ë¦¬í•©ë‹ˆë‹¤.
 	}
 	
-	public void DoGame() // 1/60ÃÊ¿¡ ÇÑ¹ø¾¿ SurfaceClass¿¡¼­ È£ÃâµÈ´Ù. °ÔÀÓÀÇ ÄÚ¾î ºÎºĞÀ» ³Ö´Â´Ù.
+	public void DoGame() // 1/60ì´ˆì— í•œë²ˆì”© SurfaceClassì—ì„œ í˜¸ì¶œëœë‹¤. ê²Œì„ì˜ ì½”ì–´ ë¶€ë¶„ì„ ë„£ëŠ”ë‹¤.
 	{
 		synchronized ( mGL )
 		{
-			// °ÔÀÓÀÇ ÄÚ¾î ºÎºĞÀ» ÄÚµùÇÕ´Ï´Ù.
+			// ê²Œì„ì˜ ì½”ì–´ ë¶€ë¶„ì„ ì½”ë”©í•©ë‹ˆë‹¤.
 		}
 	}
 }
