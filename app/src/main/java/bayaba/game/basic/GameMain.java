@@ -2,11 +2,14 @@ package bayaba.game.basic;
 
 import android.content.Context;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import javax.microedition.khronos.opengles.GL10;
 
 import bayaba.engine.lib.GameInfo;
+import bayaba.engine.lib.GameObject;
+import bayaba.engine.lib.Sprite;
 
 public class GameMain
 {
@@ -15,7 +18,14 @@ public class GameMain
 	public Random MyRand = new Random(); // 랜덤 발생기
 	public GameInfo gInfo; // 게임 환경 설정용 클래스 : MainActivity에 선언된 것을 전달 받는다.
 	public float TouchX, TouchY;
-	
+
+    Sprite backSpr = new Sprite();
+    Sprite clothSpr = new Sprite();
+
+    ArrayList<GameObject>Game = new ArrayList<GameObject>();
+    GameObject Hero = new GameObject();
+
+
 	public GameMain( Context context, GameInfo info ) // 클래스 생성자 (메인 액티비티에서 호출)
 	{
 		MainContext = context; // 메인 컨텍스트를 변수에 보관한다.
@@ -25,7 +35,11 @@ public class GameMain
 	public void LoadGameData() // SurfaceClass에서 OpenGL이 초기화되면 최초로 호출되는 함수
 	{
 		// 게임 데이터를 로드합니다.
-	}
+        backSpr.LoadSprite(mGL, MainContext, "back.spr");
+        clothSpr.LoadSprite(mGL, MainContext, "clotharmor.spr");
+
+        Hero.SetObject(clothSpr, 0, 0, 240, 350, 0, 0);
+    }
 	
 	public void PushButton( boolean push ) // OpenGL 화면에 터치가 발생하면 GLView에서 호출된다.
 	{
@@ -37,6 +51,11 @@ public class GameMain
 		synchronized ( mGL )
 		{
 			// 게임의 코어 부분을 코딩합니다.
+            backSpr.PutAni(gInfo, 240, 400, 0, 0);
+
+            Hero.DrawSprite(gInfo);
+            Hero.AddFrameLoop(0.2f);
+
 		}
 	}
 }
