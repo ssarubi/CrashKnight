@@ -22,8 +22,12 @@ public class GameMain
     Sprite backSpr = new Sprite();
     Sprite clothSpr = new Sprite();
 
+    Sprite ratSpr = new Sprite();
+
     ArrayList<GameObject>Game = new ArrayList<GameObject>();
+
     GameObject Hero = new GameObject();
+    GameObject Monster = new GameObject();
 
 
 	public GameMain( Context context, GameInfo info ) // 클래스 생성자 (메인 액티비티에서 호출)
@@ -38,7 +42,12 @@ public class GameMain
         backSpr.LoadSprite(mGL, MainContext, "back.spr");
         clothSpr.LoadSprite(mGL, MainContext, "clotharmor.spr");
 
-        Hero.SetObject(clothSpr, 0, 0, 240, 350, 0, 0);
+        ratSpr.LoadSprite(mGL, MainContext, "rat.spr");
+
+        Hero.SetObject(clothSpr, 0, 0, 40, 400, 0, 0);
+        Monster.SetObject(ratSpr, 0, 0, 440, 400, 0, 0);
+
+
     }
 	
 	public void PushButton( boolean push ) // OpenGL 화면에 터치가 발생하면 GLView에서 호출된다.
@@ -55,6 +64,9 @@ public class GameMain
 
             Hero.DrawSprite(gInfo);
             Hero.AddFrameLoop(0.2f);
+
+            Monster.DrawSprite(gInfo);
+            Monster.AddFrameLoop(0.2f);
 
 		}
 	}
