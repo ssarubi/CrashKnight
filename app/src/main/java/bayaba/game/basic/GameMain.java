@@ -29,7 +29,6 @@ public class GameMain
     Sprite backSpr = new Sprite();
     Sprite clothSpr = new Sprite();
 
-
     Sprite ratSpr = new Sprite();
     Sprite crabSpr = new Sprite();
 
@@ -39,22 +38,26 @@ public class GameMain
 
     public void Stageinit(){
         GameObject temp = new GameObject();
+        GameObject temp2 = new GameObject();
+        Monster.clear();
 
         if(Stage.state >= 1){
-            temp.SetObject(ratSpr, 0, 0, 440, 400, 0, 0);
+            temp.SetObject(ratSpr, 0, 0, 430, 400, 0, 0);
             temp.mx1 = -1;
             temp.energy = 100;
-            temp.damage = 5;
-            temp.AddFrameLoop(0.2f);
-            Monster.add(temp);
+            temp.damage = 1;
+            temp.layer = 0.2f;
+            Monster.add(0, temp);
+            Log.d("1번 몬스터 등록", String.valueOf(Monster.get(0)));
         }
         if(Stage.state >= 2){
-            temp.SetObject(crabSpr, 0, 0, 450, 400, 0, 0);
-            temp.mx1 = -1;
-            temp.energy = 100;
-            temp.damage = 5;
-            temp.AddFrameLoop(0.2f);
-            Monster.add(temp);
+            temp2.SetObject(crabSpr, 0, 0, 450, 400, 0, 0);
+            temp2.mx1 = -1;
+            temp2.energy = 200;
+            temp2.damage = 2;
+            temp.layer = 0.2f;
+            Monster.add(1, temp2);
+            Log.d("2번 몬스터 등록", String.valueOf(Monster.get(0)));
 
         }
     }
@@ -152,6 +155,11 @@ public class GameMain
 		synchronized ( mGL )
 		{
 			// 게임의 코어 부분을 코딩합니다.
+            if(Monster.size() == 0){
+                Stage.state++;
+                Stageinit();
+            }
+
             backSpr.PutAni(gInfo, 240, 400, 0, 0);
 
             Hero.x += Hero.speed + Hero.mx1;
@@ -162,11 +170,17 @@ public class GameMain
             for(int i = 0; i < Monster.size(); i++){
                 Monster.get(i).x += Monster.get(i).speed + Monster.get(i).mx1;
                 Monster.get(i).DrawSprite(gInfo);
+                Monster.get(i).AddFrameLoop(Monster.get(i).layer);
+            }
+            for(int i = 0; i < Monster.size(); i++){
                 if(Monster.get(i).dead) Monster.remove(i);
             }
 
             if(Stage.timer > 60){
                 Log.d("Monster Size : ", String.valueOf(Monster.size()));
+                for(int i = 0; i < Monster.size(); i++){
+                    Log.d("Monster value", String.valueOf(Monster.get(i)));
+                }
                 Stage.timer = 0;
             }
                 Stage.timer++;
@@ -175,10 +189,7 @@ public class GameMain
             DrawFont();
             DamagePanel();
 
-            if(Monster.size() == 0){
-                Stage.state++;
-                Stageinit();
-            }
+
 		}
 	}
 }
