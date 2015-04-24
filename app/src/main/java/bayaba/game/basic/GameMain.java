@@ -1,6 +1,7 @@
 package bayaba.game.basic;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -34,6 +35,7 @@ public class GameMain
 
     Sprite ratSpr = new Sprite();
     Sprite crabSpr = new Sprite();
+    Sprite snakeSpr = new Sprite();
 
     GameObject Stage = new GameObject();
     GameObject Hero = new GameObject();
@@ -47,10 +49,12 @@ public class GameMain
         Monster.clear();
         Lifebar.clear();
 
+        Log.d("Stage Clear !! Stage ", String.valueOf(Stage.state));
+
         if(Stage.state >= 1){
             temp = new GameObject();
             temp.SetObject(ratSpr, 0, 0, 430, 400, 0, 0);
-            temp.mx1 = -1;
+            temp.subfr = -0.9f;
             temp.energy = 100;
             temp.state = 100;
             temp.damage = 1;
@@ -64,11 +68,26 @@ public class GameMain
         if(Stage.state >= 2){
             temp = new GameObject();
             temp.SetObject(crabSpr, 0, 0, 450, 400, 0, 0);
-            temp.mx1 = -1;
+            temp.subfr = -0.8f;
             temp.energy = 200;
             temp.state = 200;
             temp.damage = 2;
             temp.layer = 0.2f;
+            temp.flip = true;
+            Monster.add(temp);
+
+            Lifetemp = new ButtonObject();
+            Lifetemp.SetButton(LifeSpr, ButtonType.TYPE_PROGRESS, 0, 0, 0, 0);
+            Lifebar.add(Lifetemp);
+        }
+        if(Stage.state >= 3){
+            temp = new GameObject();
+            temp.SetObject(snakeSpr, 0, 0, 450, 400, 0, 0);
+            temp.subfr = -1.2f;
+            temp.energy = 500;
+            temp.state = 500;
+            temp.damage = 2;
+            temp.layer = 0.3f;
             temp.flip = true;
             Monster.add(temp);
 
@@ -92,7 +111,7 @@ public class GameMain
     public void DamagePanel(){
         if(DPTimer > 0){
             DP.BeginFont(gInfo);
-            DP.DrawFontCenter(mGL, gInfo, Stage.x, Stage.y, 0, 0, 0, 10, String.valueOf(Hero.damage));
+            DP.DrawFontCenter(mGL, gInfo, Stage.x, Stage.y, 0, 0, 0, 9, String.valueOf(Hero.damage));
             DP.EndFont(gInfo);
             Stage.y--;
         }
@@ -123,19 +142,16 @@ public class GameMain
         if(Hero.energy <= 0){
             // 패배처리
         }
-        if(Monster.energy <= 0){
-            Monster.dead = true;
-        }
+        if(Monster.energy <= 0) Monster.dead = true;
 
         DPTimer = 50;
         Stage.x = Monster.x;
-        Stage.y = Monster.y-25;
-
+        Stage.y = Monster.y-20;
     }
 
     public void MakeMonster(){
         for(int i = 0; i < Monster.size(); i++){
-            Monster.get(i).x += Monster.get(i).speed + Monster.get(i).mx1;
+            Monster.get(i).x += Monster.get(i).speed + Monster.get(i).subfr;
             Monster.get(i).DrawSprite(gInfo);
             Monster.get(i).AddFrameLoop(Monster.get(i).layer);
         }
@@ -150,7 +166,7 @@ public class GameMain
     public void DrawLifebar(){
         for(int i = 0; i < Lifebar.size(); i++){
             Lifebar.get(i).x = Monster.get(i).x;
-            Lifebar.get(i).y = Monster.get(i).y-30;
+            Lifebar.get(i).y = Monster.get(i).y-25;
             Lifebar.get(i).DrawSprite(mGL, 0, gInfo, font);
             Lifebar.get(i).energy = (Monster.get(i).energy / Monster.get(i).state) * 100;
         }
@@ -172,13 +188,14 @@ public class GameMain
 
         ratSpr.LoadSprite(mGL, MainContext, "rat.spr");
         crabSpr.LoadSprite(mGL, MainContext, "crab.spr");
+        snakeSpr.LoadSprite(mGL, MainContext, "snake.spr");
 
         Hero.SetObject(clothSpr, 0, 0, 40, 400, 0, 0);
 
         // 초기 데이터 세팅
         Stage.state = 1;
 
-        Hero.mx1 = 1;
+        Hero.subfr = 1;
         Hero.energy = 1000;
         Hero.damage = 20;
 
@@ -203,7 +220,7 @@ public class GameMain
 
             backSpr.PutAni(gInfo, 240, 400, 0, 0);
 
-            Hero.x += Hero.speed + Hero.mx1;
+            Hero.x += Hero.speed + Hero.subfr;
             Hero.DrawSprite(gInfo);
             Hero.AddFrameLoop(0.2f);
 
