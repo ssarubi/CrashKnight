@@ -1,13 +1,14 @@
 package bayaba.game.basic;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Random;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import bayaba.engine.lib.ButtonObject;
+import bayaba.engine.lib.ButtonType;
 import bayaba.engine.lib.Font;
 import bayaba.engine.lib.GameInfo;
 import bayaba.engine.lib.GameObject;
@@ -27,6 +28,8 @@ public class GameMain
     Font DP = new Font();
 
     Sprite backSpr = new Sprite();
+    Sprite LifeSpr = new Sprite();
+
     Sprite clothSpr = new Sprite();
 
     Sprite ratSpr = new Sprite();
@@ -35,30 +38,43 @@ public class GameMain
     GameObject Stage = new GameObject();
     GameObject Hero = new GameObject();
     ArrayList<GameObject>Monster = new ArrayList<GameObject>();
+    ArrayList<ButtonObject>Lifebar = new ArrayList<ButtonObject>();
 
     public void Stageinit(){
-        GameObject temp = new GameObject();
-        GameObject temp2 = new GameObject();
+        GameObject temp;
+        ButtonObject Lifetemp;
+
         Monster.clear();
+        Lifebar.clear();
 
         if(Stage.state >= 1){
+            temp = new GameObject();
             temp.SetObject(ratSpr, 0, 0, 430, 400, 0, 0);
             temp.mx1 = -1;
             temp.energy = 100;
+            temp.state = 100;
             temp.damage = 1;
             temp.layer = 0.2f;
-            Monster.add(0, temp);
-            Log.d("1번 몬스터 등록", String.valueOf(Monster.get(0)));
+            Monster.add(temp);
+
+            Lifetemp = new ButtonObject();
+            Lifetemp.SetButton(LifeSpr, ButtonType.TYPE_PROGRESS, 0, 0, 0, 0);
+            Lifebar.add(Lifetemp);
         }
         if(Stage.state >= 2){
-            temp2.SetObject(crabSpr, 0, 0, 450, 400, 0, 0);
-            temp2.mx1 = -1;
-            temp2.energy = 200;
-            temp2.damage = 2;
+            temp = new GameObject();
+            temp.SetObject(crabSpr, 0, 0, 450, 400, 0, 0);
+            temp.mx1 = -1;
+            temp.energy = 200;
+            temp.state = 200;
+            temp.damage = 2;
             temp.layer = 0.2f;
-            Monster.add(1, temp2);
-            Log.d("2번 몬스터 등록", String.valueOf(Monster.get(0)));
+            temp.flip = true;
+            Monster.add(temp);
 
+            Lifetemp = new ButtonObject();
+            Lifetemp.SetButton(LifeSpr, ButtonType.TYPE_PROGRESS, 0, 0, 0, 0);
+            Lifebar.add(Lifetemp);
         }
     }
 
@@ -82,7 +98,7 @@ public class GameMain
         }
     }
 
-    public void Crash(){
+    public void CrashCheck(){
 
         for(int i = 0; i < Monster.size(); i++){
             if(gInfo.CrashCheck(Hero, Monster.get(i), 0, 0)){
@@ -117,6 +133,29 @@ public class GameMain
 
     }
 
+    public void MakeMonster(){
+        for(int i = 0; i < Monster.size(); i++){
+            Monster.get(i).x += Monster.get(i).speed + Monster.get(i).mx1;
+            Monster.get(i).DrawSprite(gInfo);
+            Monster.get(i).AddFrameLoop(Monster.get(i).layer);
+        }
+        for(int i = 0; i < Monster.size(); i++){
+            if(Monster.get(i).dead){
+                Monster.remove(i);
+                Lifebar.remove(i);
+            }
+        }
+    }
+
+    public void DrawLifebar(){
+        for(int i = 0; i < Lifebar.size(); i++){
+            Lifebar.get(i).x = Monster.get(i).x;
+            Lifebar.get(i).y = Monster.get(i).y-30;
+            Lifebar.get(i).DrawSprite(mGL, 0, gInfo, font);
+            Lifebar.get(i).energy = (Monster.get(i).energy / Monster.get(i).state) * 100;
+        }
+    }
+
 	public GameMain( Context context, GameInfo info ) // 클래스 생성자 (메인 액티비티에서 호출)
 	{
 		MainContext = context; // 메인 컨텍스트를 변수에 보관한다.
@@ -127,6 +166,8 @@ public class GameMain
 	{
 		// 게임 데이터를 로드합니다.
         backSpr.LoadSprite(mGL, MainContext, "back.spr");
+        LifeSpr.LoadSprite(mGL, MainContext, "Lifebar.spr");
+
         clothSpr.LoadSprite(mGL, MainContext, "clotharmor.spr");
 
         ratSpr.LoadSprite(mGL, MainContext, "rat.spr");
@@ -166,29 +207,11 @@ public class GameMain
             Hero.DrawSprite(gInfo);
             Hero.AddFrameLoop(0.2f);
 
-
-            for(int i = 0; i < Monster.size(); i++){
-                Monster.get(i).x += Monster.get(i).speed + Monster.get(i).mx1;
-                Monster.get(i).DrawSprite(gInfo);
-                Monster.get(i).AddFrameLoop(Monster.get(i).layer);
-            }
-            for(int i = 0; i < Monster.size(); i++){
-                if(Monster.get(i).dead) Monster.remove(i);
-            }
-
-            if(Stage.timer > 60){
-                Log.d("Monster Size : ", String.valueOf(Monster.size()));
-                for(int i = 0; i < Monster.size(); i++){
-                    Log.d("Monster value", String.valueOf(Monster.get(i)));
-                }
-                Stage.timer = 0;
-            }
-                Stage.timer++;
-
-            Crash();
+            MakeMonster();
+            DrawLifebar();
+            CrashCheck();
             DrawFont();
             DamagePanel();
-
 
 		}
 	}
