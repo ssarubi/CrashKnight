@@ -133,6 +133,9 @@ public class GameMain
     }
 
     public void DrawButton(){
+
+        if(Button.get(0).click == ButtonType.STATE_CLK_BUTTON)Hero.damage++;
+
         for(int i = 0; i < Button.size(); i++){
 
             if ( Button.get(i).type == ButtonType.TYPE_ONE_CLICK ) // 버튼 타입인지 체크한다.
@@ -320,9 +323,16 @@ public class GameMain
         // 버튼 세팅
         ButtonObject temp;
         temp = new ButtonObject();
-        temp.SetButton(buttonSpr, ButtonType.TYPE_ONE_CLICK, 0, 30, 400, 0);
-
+        temp.SetButton(buttonSpr, ButtonType.TYPE_ONE_CLICK, 0, 50, 600, 2);
         Button.add(temp);
+        temp = new ButtonObject();
+        temp.SetButton(buttonSpr, ButtonType.TYPE_ONE_CLICK, 0, 100, 600, 3);
+        Button.add(temp);
+        temp = new ButtonObject();
+        temp.SetButton(buttonSpr, ButtonType.TYPE_ONE_CLICK, 0, 150, 600, 0);
+        Button.add(temp);
+
+
 
         Stageinit();
 
@@ -331,7 +341,7 @@ public class GameMain
 	public void PushButton( boolean push ) // OpenGL 화면에 터치가 발생하면 GLView에서 호출된다.
 	{
 		// 터치를 처리합니다.
-        for ( int i = 0; i < Button.size(); i++ ) Button.get(i).CheckButton( gInfo, push, TouchX, TouchY );
+        for ( int i = 0; i < Button.size(); i++ )Button.get(i).CheckButton( gInfo, push, TouchX, TouchY );
     }
 	
 	public void DoGame() // 1/60초에 한번씩 SurfaceClass에서 호출된다. 게임의 코어 부분을 넣는다.
@@ -363,6 +373,7 @@ public class GameMain
             MakeDamagePanel();
             DrawFont();
             DrawMessage(Stage.x, Stage.y, 20, msg, Stage.atimer);
+
 
 
 		}
