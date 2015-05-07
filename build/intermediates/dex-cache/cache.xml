@@ -2,11 +2,11 @@
 <items version="2" >
 
     <item
-        jar="C:\Users\Administrator\AndroidStudioProjects\FirstGame\app\libs\bayabalib20140719.jar"
+        jar="C:\Users\Administrator\AndroidStudioProjects\CrashKnight\app\libs\bayabalib20140719.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="bddefc52c547f80c794b5d9cf62733dfd141c05a">
-        <dex dex="C:\Users\Administrator\AndroidStudioProjects\FirstGame\app\build\intermediates\pre-dexed\debug\bayabalib20140719-9bf1eed179a62f530cae5a8baeda1db510823534.jar" />
+        <dex dex="C:\Users\Administrator\AndroidStudioProjects\CrashKnight\app\build\intermediates\pre-dexed\debug\bayabalib20140719-da7a2079de991d190679f24e8169187720d9300a.jar" />
     </item>
 
 </items>
