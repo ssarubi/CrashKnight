@@ -134,7 +134,9 @@ public class GameMain
 
     public void DrawButton(){
 
-        if(Button.get(0).click == ButtonType.STATE_CLK_BUTTON)Hero.damage++;
+        if(Button.get(0).click == ButtonType.STATE_CLK_BUTTON){
+            Hero.damage++;
+        }
 
         for(int i = 0; i < Button.size(); i++){
 
@@ -157,16 +159,33 @@ public class GameMain
         Lifebar.add(Lifetemp);
     }
 
+    public void LifeRezen(){
+        if(Stage.attack > 300){
+            Stage.attack = 0;
+            Hero.horizon = 0;
+            Hero.mx2 = Math.round(Hero.x);
+            Hero.my2 = Math.round(Hero.y)-25;
+            Hero.energy += Hero.delay;
+        }
+        Stage.attack++;
+    }
+
     public void DrawFont(){
         font.BeginFont(gInfo);
         font.LoadFont(MainContext, "HMKLP.TTF");
         font.DrawFontCenter(mGL, gInfo, 240, 170, 250, 250, 250, 30, "Stage " + String.valueOf(Stage.state));
-        font.DrawFont(mGL, 30, 25, 15, "체력 : " + String.valueOf(Math.round(Hero.energy)));
-        font.DrawFont(mGL, 30, 50, 15, "공격력 : " + String.valueOf(Hero.damage));
-        font.DrawFont(mGL, 30, 75, 15, "크리티컬 확률 : " + String.valueOf(Hero.direct));
-        font.DrawFont(mGL, 30, 100, 15, "크리티컬 배수 : " + String.valueOf(Hero.current));
-        font.DrawFont(mGL, 370, 25, 15, "Gold : " + String.valueOf(Stage.mx1));
-        font.DrawFont(mGL, 370, 50, 15, "Income : " + String.valueOf(Stage.mx2));
+        font.DrawFont(mGL, 30, 30, 20, "체력 : " + String.valueOf(Math.round(Hero.energy)));
+        font.DrawFont(mGL, 30, 60, 20, "공격력 : " + String.valueOf(Hero.damage));
+        font.DrawFont(mGL, 30, 90, 20, "크리티컬 확률 : " + String.valueOf(Hero.direct));
+        font.DrawFont(mGL, 30, 120, 20, "크리티컬 배수 : " + String.valueOf(Hero.current));
+        font.DrawFont(mGL, 30, 150, 20, "체력 회복량 : " + String.valueOf(Hero.delay));
+        font.DrawFont(mGL, 370, 30, 20, "Gold : " + String.valueOf(Stage.mx1));
+        font.DrawFont(mGL, 370, 60, 20, "Income : " + String.valueOf(Stage.mx2));
+        font.DrawFont(mGL, 80, 600, 15, "공격력 증가");
+        font.DrawFont(mGL, 80, 660, 15, "체력 증가");
+        font.DrawFont(mGL, 80, 720, 15, "회복력 증가");
+        font.DrawFont(mGL, 330, 600, 15, "크리티컬 확률 증가");
+        font.DrawFont(mGL, 330, 660, 15, "크리티컬 배수 증가");
         font.EndFont(gInfo);
     }
 
@@ -195,6 +214,11 @@ public class GameMain
             Hero.atimer++;
         }
 
+        if(Hero.horizon < 50){
+            DP.DrawFontCenter(mGL, gInfo, Hero.mx2, Hero.my2, 0, 255, 0, 9, String.valueOf(Hero.delay));
+            Hero.horizon++;
+        }
+
         DP.EndFont(gInfo);
     }
 
@@ -207,7 +231,7 @@ public class GameMain
                 Monster.get(i).speed = 5;
 
                 Monster.get(i).atimer = 0;
-                Monster.get(i).mx1 = Math.round(Monster.get(i).x)+5;
+                Monster.get(i).mx1 = Math.round(Monster.get(i).x);
                 Monster.get(i).my1 = Math.round(Monster.get(i).y)-20;
 
                 Hero.atimer = 0;
@@ -311,6 +335,7 @@ public class GameMain
 
         // 초기 데이터 세팅
         Stage.state = 1;
+        // mx1
         Stage.mx1 = 1;
         Stage.mx2 = 1;
 
@@ -319,17 +344,24 @@ public class GameMain
         Hero.damage = 25;
         Hero.current = 2;
         Hero.direct = 50;
+        Hero.delay = 1;
 
         // 버튼 세팅
         ButtonObject temp;
         temp = new ButtonObject();
-        temp.SetButton(buttonSpr, ButtonType.TYPE_ONE_CLICK, 0, 50, 600, 2);
+        temp.SetButton(buttonSpr, ButtonType.TYPE_ONE_CLICK, 0, 40, 610, 0);
         Button.add(temp);
         temp = new ButtonObject();
-        temp.SetButton(buttonSpr, ButtonType.TYPE_ONE_CLICK, 0, 100, 600, 3);
+        temp.SetButton(buttonSpr, ButtonType.TYPE_ONE_CLICK, 0, 40, 670, 0);
         Button.add(temp);
         temp = new ButtonObject();
-        temp.SetButton(buttonSpr, ButtonType.TYPE_ONE_CLICK, 0, 150, 600, 0);
+        temp.SetButton(buttonSpr, ButtonType.TYPE_ONE_CLICK, 0, 40, 730, 0);
+        Button.add(temp);
+        temp = new ButtonObject();
+        temp.SetButton(buttonSpr, ButtonType.TYPE_ONE_CLICK, 0, 270, 610, 0);
+        Button.add(temp);
+        temp = new ButtonObject();
+        temp.SetButton(buttonSpr, ButtonType.TYPE_ONE_CLICK, 0, 270, 670, 0);
         Button.add(temp);
 
 
@@ -372,9 +404,10 @@ public class GameMain
             DrawLifebar();
             MakeDamagePanel();
             DrawFont();
+            LifeRezen();
+
+
             DrawMessage(Stage.x, Stage.y, 20, msg, Stage.atimer);
-
-
 
 		}
 	}
