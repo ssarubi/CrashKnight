@@ -25,8 +25,15 @@ public class GameMain
 
     String msg = "";
 
+    float damagecost = 100;
+    float energycost = 1000;
+    float delaycost = 1000;
+    float directcost = 1000;
+    float currentcost = 100000;
+
     Font font = new Font();
     Font DP = new Font();
+    Font MonLife = new Font();
     Font Message = new Font();
 
     Sprite backSpr = new Sprite();
@@ -34,11 +41,25 @@ public class GameMain
     Sprite LifeSpr = new Sprite();
 
     Sprite clothSpr = new Sprite();
+    Sprite leatherSpr = new Sprite();
+    Sprite mailSpr = new Sprite();
+    Sprite plateSpr = new Sprite();
+    Sprite redSpr = new Sprite();
+    Sprite goldSpr = new Sprite();
 
     Sprite ratSpr = new Sprite();
     Sprite crabSpr = new Sprite();
     Sprite snakeSpr = new Sprite();
     Sprite goblinSpr = new Sprite();
+    Sprite eyeSpr = new Sprite();
+    Sprite firefoxSpr = new Sprite();
+    Sprite skeletonSpr = new Sprite();
+    Sprite skeleton2Spr = new Sprite();
+    Sprite ogreSpr = new Sprite();
+    Sprite wizardSpr = new Sprite();
+    Sprite spectreSpr = new Sprite();
+    Sprite deathSpr = new Sprite();
+    Sprite bossSpr = new Sprite();
 
     GameObject Stage = new GameObject();
     GameObject Hero = new GameObject();
@@ -57,74 +78,33 @@ public class GameMain
         // 히어로 세팅
 
 
-
-
-
-        // 몬스터 세팅
-        if(Stage.state >= 1){
+        for(int i = 0; i < Math.round(Stage.state / 5) + 1; i++){
+            float seq = Math.round(Math.random() * 13 + 1);
             temp = new GameObject();
-            temp.SetObject(ratSpr, 0, 0, 400, 400, 0, 0);
-            temp.subfr = -0.9f;
-            temp.energy = 50;
-            temp.state = 50;
-            temp.damage = 1;
+            if(seq == 1) temp.SetObject(ratSpr, 0, 0, 450, 475, 0, 0);
+            else if(seq == 2) temp.SetObject(crabSpr, 0, 0, 450, 475, 0, 0);
+            else if(seq == 3) temp.SetObject(snakeSpr, 0, 0, 450, 475, 0, 0);
+            else if(seq == 4) temp.SetObject(goblinSpr, 0, 0, 450, 475, 0, 0);
+            else if(seq == 5) temp.SetObject(eyeSpr, 0, 0, 450, 475, 0, 0);
+            else if(seq == 6) temp.SetObject(firefoxSpr, 0, 0, 450, 475, 0, 0);
+            else if(seq == 7) temp.SetObject(skeletonSpr, 0, 0, 450, 475, 0, 0);
+            else if(seq == 8) temp.SetObject(skeleton2Spr, 0, 0, 450, 475, 0, 0);
+            else if(seq == 9) temp.SetObject(ogreSpr, 0, 0, 450, 475, 0, 0);
+            else if(seq == 10) temp.SetObject(wizardSpr, 0, 0, 450, 475, 0, 0);
+            else if(seq == 11) temp.SetObject(spectreSpr, 0, 0, 450, 475, 0, 0);
+            else if(seq == 12) temp.SetObject(deathSpr, 0, 0, 450, 475, 0, 0);
+            else if(seq == 13) temp.SetObject(bossSpr, 0, 0, 450, 475, 0, 0);
+            else temp.SetObject(ratSpr, 0, 0, 450, 475, 0, 0);
+
+            if(seq == 2 || seq == 3 || seq == 4 || seq == 8 || seq == 10 || seq == 11 || seq == 12 || seq == 13) temp.flip = true;
+
+            temp.subfr = -0.2f;
+            temp.subfr -= Math.random();
+            temp.energy = (Stage.state * Stage.state - 1) * i + i * i + 10;
+            temp.state = (Stage.state * Stage.state - 1) * i + i * i + 10;
+            temp.damage = Stage.state + i;
             temp.layer = 0.2f;
-            Monster.add(temp);
 
-            MakeLifeBar();
-        }
-
-        if(Stage.state >= 2){
-            temp = new GameObject();
-            temp.SetObject(crabSpr, 0, 0, 405, 400, 0, 0);
-            temp.subfr = -0.7f;
-            temp.energy = 100;
-            temp.state = 100;
-            temp.damage = 2;
-            temp.layer = 0.3f;
-            temp.flip = true;
-            Monster.add(temp);
-
-            MakeLifeBar();
-        }
-
-        if(Stage.state >= 3){
-            temp = new GameObject();
-            temp.SetObject(snakeSpr, 0, 0, 410, 400, 0, 0);
-            temp.subfr = -1.2f;
-            temp.energy = 250;
-            temp.state = 250;
-            temp.damage = 3;
-            temp.layer = 0.2f;
-            temp.flip = true;
-            Monster.add(temp);
-
-            MakeLifeBar();
-        }
-
-        if(Stage.state >= 4){
-            temp = new GameObject();
-            temp.SetObject(goblinSpr, 0, 0, 415, 400, 0, 0);
-            temp.subfr = -1.0f;
-            temp.energy = 500;
-            temp.state = 500;
-            temp.damage = 5;
-            temp.layer = 0.2f;
-            temp.flip = true;
-            Monster.add(temp);
-
-            MakeLifeBar();
-        }
-
-        if(Stage.state >= 5){
-            temp = new GameObject();
-            temp.SetObject(goblinSpr, 0, 0, 420, 400, 0, 0);
-            temp.subfr = -1.0f;
-            temp.energy = 500;
-            temp.state = 500;
-            temp.damage = 5;
-            temp.layer = 0.2f;
-            temp.flip = true;
             Monster.add(temp);
 
             MakeLifeBar();
@@ -134,8 +114,116 @@ public class GameMain
 
     public void DrawButton(){
 
+        // 공격력
         if(Button.get(0).click == ButtonType.STATE_CLK_BUTTON){
-            Hero.damage++;
+            if(Stage.mx1 > damagecost){
+                Stage.mx1 -= damagecost;
+                damagecost = damagecost * 1.05f;
+                Hero.damage++;
+
+                Stage.x = 240;
+                Stage.y = 350;
+                Stage.atimer = 60;
+                msg = "공격력 증가 !!";
+            } else{
+                Stage.x = 240;
+                Stage.y = 350;
+                Stage.atimer = 60;
+                msg = "경험치가 부족합니다";
+            }
+        }
+        // 체력
+        if(Button.get(1).click == ButtonType.STATE_CLK_BUTTON){
+            if(Stage.mx1 > energycost){
+                Stage.mx1 -= energycost;
+                energycost = energycost * 1.05f;
+                Hero.energy = Hero.energy + 50;
+                Hero.state = Hero.state + 50;
+
+                Stage.x = 240;
+                Stage.y = 350;
+                Stage.atimer = 60;
+                msg = "체력 증가 !!";
+            } else{
+                Stage.x = 240;
+                Stage.y = 350;
+                Stage.atimer = 60;
+                msg = "경험치가 부족합니다";
+            }
+        }
+        // 체력재생
+        if(Button.get(2).click == ButtonType.STATE_CLK_BUTTON){
+            if(Stage.mx1 > delaycost){
+                Stage.mx1 -= delaycost;
+                delaycost = delaycost * 1.05f;
+                Hero.delay++;
+
+                Stage.x = 240;
+                Stage.y = 350;
+                Stage.atimer = 60;
+                msg = "회복력 증가 !!";
+            } else{
+                Stage.x = 240;
+                Stage.y = 350;
+                Stage.atimer = 60;
+                msg = "경험치가 부족합니다";
+            }
+        }
+        // 크리티컬 확률
+        if(Button.get(3).click == ButtonType.STATE_CLK_BUTTON){
+            if(Stage.mx1 > directcost){
+                Stage.mx1 -= directcost;
+                directcost = directcost * 1.05f;
+                Hero.direct++;
+
+                Stage.x = 240;
+                Stage.y = 350;
+                Stage.atimer = 60;
+                msg = "크리티컬 확률 증가 !!";
+            } else{
+                Stage.x = 240;
+                Stage.y = 350;
+                Stage.atimer = 60;
+                msg = "경험치가 부족합니다";
+            }
+        }
+        // 크리티컬 배수
+        if(Button.get(4).click == ButtonType.STATE_CLK_BUTTON){
+            if(Stage.mx1 > currentcost){
+                Stage.mx1 -= currentcost;
+                currentcost = currentcost * 1.05f;
+                Hero.current++;
+
+                Stage.x = 240;
+                Stage.y = 350;
+                Stage.atimer = 60;
+                msg = "크리티컬 배수 증가 !!";
+            } else{
+                Stage.x = 240;
+                Stage.y = 350;
+                Stage.atimer = 60;
+                msg = "경험치가 부족합니다";
+            }
+        }
+
+        // Active Skill
+        if(Button.get(4).click == ButtonType.STATE_CLK_BUTTON){
+            Hero.energy = Hero.energy / 2;
+
+            float Monx = 480;
+            int seq = 0;
+
+            for(int i = 0; i < Monster.size(); i++){
+                if(Monster.get(i).x < Monx){
+                    Monx = Monster.get(i).x;
+                    seq = i;
+                }
+            }
+
+
+            Stage.atimer = 30;
+            msg = "Skill !!";
+            DrawMessage(Hero.x, Hero.y - 50, 12, msg, Stage.atimer);
         }
 
         for(int i = 0; i < Button.size(); i++){
@@ -168,24 +256,31 @@ public class GameMain
             Hero.energy += Hero.delay;
         }
         Stage.attack++;
+        if(Hero.energy > Hero.state) Hero.energy = Hero.state;
     }
 
     public void DrawFont(){
         font.BeginFont(gInfo);
         font.LoadFont(MainContext, "HMKLP.TTF");
-        font.DrawFontCenter(mGL, gInfo, 240, 170, 250, 250, 250, 30, "Stage " + String.valueOf(Stage.state));
-        font.DrawFont(mGL, 30, 30, 20, "체력 : " + String.valueOf(Math.round(Hero.energy)));
+        font.DrawFontCenter(mGL, gInfo, 240, 200, 250, 250, 250, 30, "Stage " + String.valueOf(Stage.state));
+
+        // Hero
+        font.DrawFont(mGL, 30, 30, 20, "체력 : " + String.valueOf(Math.round(Hero.energy)) + " / " + String.valueOf(Math.round(Hero.state)));
         font.DrawFont(mGL, 30, 60, 20, "공격력 : " + String.valueOf(Hero.damage));
         font.DrawFont(mGL, 30, 90, 20, "크리티컬 확률 : " + String.valueOf(Hero.direct));
         font.DrawFont(mGL, 30, 120, 20, "크리티컬 배수 : " + String.valueOf(Hero.current));
         font.DrawFont(mGL, 30, 150, 20, "체력 회복량 : " + String.valueOf(Hero.delay));
-        font.DrawFont(mGL, 370, 30, 20, "Gold : " + String.valueOf(Stage.mx1));
+        font.DrawFont(mGL, 370, 30, 20, "Exp : " + String.valueOf(Stage.mx1));
         font.DrawFont(mGL, 370, 60, 20, "Income : " + String.valueOf(Stage.mx2));
-        font.DrawFont(mGL, 80, 600, 15, "공격력 증가");
-        font.DrawFont(mGL, 80, 660, 15, "체력 증가");
-        font.DrawFont(mGL, 80, 720, 15, "회복력 증가");
-        font.DrawFont(mGL, 330, 600, 15, "크리티컬 확률 증가");
-        font.DrawFont(mGL, 330, 660, 15, "크리티컬 배수 증가");
+
+        // Button
+        font.DrawFont(mGL, 80, 600, 15, "공격력 증가 : " + String.valueOf(Math.round(damagecost)));
+        font.DrawFont(mGL, 80, 660, 15, "체력 증가 : " + String.valueOf(Math.round(energycost)));
+        font.DrawFont(mGL, 80, 720, 15, "회복력 증가 : " + String.valueOf(Math.round(delaycost)));
+        font.DrawFont(mGL, 330, 600, 15, "크리티컬 확률 증가 : " + String.valueOf(Math.round(directcost)));
+        font.DrawFont(mGL, 330, 660, 15, "크리티컬 배수 증가 : " + String.valueOf(Math.round(currentcost)));
+
+        font.DrawFont(mGL, 330, 720, 15, "Skill");
         font.EndFont(gInfo);
     }
 
@@ -209,11 +304,13 @@ public class GameMain
             }
         }
 
+        // 공격력 패널
         if(Hero.atimer < 50){
             DP.DrawFontCenter(mGL, gInfo, Hero.mx1, Hero.my1, 255, 0, 0, 9, String.valueOf(Hero.crash));
             Hero.atimer++;
         }
 
+        // 체력회복 패널
         if(Hero.horizon < 50){
             DP.DrawFontCenter(mGL, gInfo, Hero.mx2, Hero.my2, 0, 255, 0, 9, String.valueOf(Hero.delay));
             Hero.horizon++;
@@ -264,10 +361,7 @@ public class GameMain
             Monster.energy -= Hero.damage;
         }
 
-        if(Hero.energy <= 0){
-            // 패배처리 처음부터 시작
-            Stage.state = 1;
-        }
+        if(Hero.energy <= 0) Hero.dead = true;
         if(Monster.energy <= 0) Monster.dead = true;
     }
 
@@ -283,6 +377,21 @@ public class GameMain
                 Lifebar.remove(i);
             }
         }
+
+        if(Hero.dead){
+            Stage.state = 0;
+            Monster.clear();
+            Lifebar.clear();
+
+            Hero.energy = Hero.state;
+            Hero.dead = false;
+            Hero.x = 30;
+
+            Stage.x = 240;
+            Stage.y = 280;
+            Stage.atimer = 60;
+            msg = "Stage Fail !!!!!!";
+        }
     }
 
     public void DrawLifebar(){
@@ -291,10 +400,13 @@ public class GameMain
             Lifebar.get(i).y = Monster.get(i).y-25;
             Lifebar.get(i).DrawSprite(mGL, 0, gInfo, font);
             Lifebar.get(i).energy = (Monster.get(i).energy / Monster.get(i).state) * 100;
+            MonLife.BeginFont(gInfo);
+            MonLife.DrawFontCenter(mGL, gInfo, Monster.get(i).x, Monster.get(i).y - 35, 0, 0, 0, 7, String.valueOf(Math.round(Monster.get(i).energy)) + " / " + String.valueOf(Monster.get(i).state));
+            MonLife.EndFont(gInfo);
         }
     }
 
-    public void GoldIncrease(){
+    public void ExpIncrease(){
         if(Stage.timer > 60){
             Stage.mx1 += Stage.mx2;
             Stage.timer = 0;
@@ -305,7 +417,7 @@ public class GameMain
     public void DrawMessage(float x, float y, float size, String text, long timer){
         if(timer > 0){
             Message.BeginFont(gInfo);
-            Message.DrawFontCenter(mGL, gInfo, x, y, 5, 5, 5, size, text);
+            Message.DrawFontCenter(mGL, gInfo, x, y, 0, 0, 0, size, text);
             Message.EndFont(gInfo);
             Stage.atimer--;
         }
@@ -325,25 +437,40 @@ public class GameMain
         LifeSpr.LoadSprite(mGL, MainContext, "Lifebar.spr");
 
         clothSpr.LoadSprite(mGL, MainContext, "clotharmor.spr");
+        leatherSpr.LoadSprite(mGL, MainContext, "leatherarmor.spr");
+        mailSpr.LoadSprite(mGL, MainContext, "mailarmor.spr");
+        plateSpr.LoadSprite(mGL, MainContext, "platearmor.spr");
+        redSpr.LoadSprite(mGL, MainContext, "redarmor.spr");
+        goldSpr.LoadSprite(mGL, MainContext, "goldenarmor.spr");
 
         ratSpr.LoadSprite(mGL, MainContext, "rat.spr");
         crabSpr.LoadSprite(mGL, MainContext, "crab.spr");
         snakeSpr.LoadSprite(mGL, MainContext, "snake.spr");
         goblinSpr.LoadSprite(mGL, MainContext, "goblin.spr");
+        eyeSpr.LoadSprite(mGL, MainContext, "eye.spr");
+        firefoxSpr.LoadSprite(mGL, MainContext, "firefox.spr");
+        skeletonSpr.LoadSprite(mGL, MainContext, "skeleton.spr");
+        skeleton2Spr.LoadSprite(mGL, MainContext, "skeleton2.spr");
+        ogreSpr.LoadSprite(mGL, MainContext, "ogre.spr");
+        wizardSpr.LoadSprite(mGL, MainContext, "wizard.spr");
+        spectreSpr.LoadSprite(mGL, MainContext, "spectre.spr");
+        deathSpr.LoadSprite(mGL, MainContext, "deathknight.spr");
+        bossSpr.LoadSprite(mGL, MainContext, "boss.spr");
 
-        Hero.SetObject(clothSpr, 0, 0, 40, 400, 0, 0);
+        Hero.SetObject(goldSpr, 0, 0, 40, 475, 0, 0);
 
         // 초기 데이터 세팅
         Stage.state = 1;
-        // mx1
+        // mx1 Exp mx2 income
         Stage.mx1 = 1;
-        Stage.mx2 = 1;
+        Stage.mx2 = 100;
 
         Hero.subfr = 1;
-        Hero.energy = 1000;
-        Hero.damage = 25;
+        Hero.energy = 100;
+        Hero.state = 100;
+        Hero.damage = 1;
         Hero.current = 2;
-        Hero.direct = 50;
+        Hero.direct = 1;
         Hero.delay = 1;
 
         // 버튼 세팅
@@ -362,6 +489,9 @@ public class GameMain
         Button.add(temp);
         temp = new ButtonObject();
         temp.SetButton(buttonSpr, ButtonType.TYPE_ONE_CLICK, 0, 270, 670, 0);
+        Button.add(temp);
+        temp = new ButtonObject();
+        temp.SetButton(buttonSpr, ButtonType.TYPE_ONE_CLICK, 0, 270, 730, 0);
         Button.add(temp);
 
 
@@ -384,9 +514,9 @@ public class GameMain
             if(Monster.size() == 0){
                 Stage.mx2 += Stage.state;
                 Stage.x = 240;
-                Stage.y = 250;
-                Stage.atimer = 120;
-                msg = "Stage Clear";
+                Stage.y = 280;
+                Stage.atimer = 60;
+                msg = "Stage " + Stage.state + " Clear";
                 Stage.state++;
                 Stageinit();
             }
@@ -398,7 +528,7 @@ public class GameMain
             Hero.AddFrameLoop(0.2f);
 
             DrawButton();
-            GoldIncrease();
+            ExpIncrease();
             CrashCheck();
             MakeMonster();
             DrawLifebar();
@@ -407,7 +537,7 @@ public class GameMain
             LifeRezen();
 
 
-            DrawMessage(Stage.x, Stage.y, 20, msg, Stage.atimer);
+            DrawMessage(Stage.x, Stage.y, 18, msg, Stage.atimer);
 
 		}
 	}
